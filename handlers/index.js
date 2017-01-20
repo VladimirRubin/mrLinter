@@ -1,0 +1,1 @@
+module.exports.pull_request_handler = require('./pull_request').pull_request_handler;

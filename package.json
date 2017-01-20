@@ -1,0 +1,29 @@
+{
+  "name": "mrlinter",
+  "version": "1.0.0",
+  "description": "PEP8 and ESLint reviewers to github PR's",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladimirRubin/mrLinter.git"
+  },
+  "keywords": [
+    "pep8",
+    "eslint",
+    "javascript",
+    "code",
+    "quality"
+  ],
+  "author": "Vladimir Rubin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VladimirRubin/mrLinter/issues"
+  },
+  "homepage": "https://github.com/VladimirRubin/mrLinter#readme",
+  "dependencies": {
+    "http-router": "^0.5.0"
+  }
+}
