@@ -12,11 +12,13 @@ routes
         // TODO: check signatures
         var body = '';
         req.on('data', function(chunk) {
+            console.log('ondata');
             body += chunk;
         });
-        req.on('end', function() {
+        req.on('end', function() {            
             var data = JSON.parse(body);
             var event = req.headers['x-github-event'];
+            console.log('ondataend with event', event);
             switch(event){
                 case 'pull_request': handlers.pull_request_handler(data);
                 case 'pull_request_review': break;
