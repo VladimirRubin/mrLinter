@@ -11,6 +11,7 @@ var pull_request_handler = function(data){
             "extra_results": {},
             "pr_number": data.json.number,
         }
+        // Only check our PR hook
         // TODO: Check PEP8, ESLint
         // TODO: Send Message
         // TODO: Response 200
