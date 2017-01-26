@@ -12,7 +12,7 @@ routes
         // TODO: check signatures
         var body = '';
         req.on('data', function(chunk) {
-            console.log('ondata');
+            console.log('ondata', chunk);
             body += chunk;
         });
         req.on('end', function() {            
