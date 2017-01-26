@@ -1,44 +1,30 @@
-var http = require('http');
-var router = require('http-router');
-var routes = router.createRouter();
-var url = require('url');
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+
 var handlers = require('./handlers');
 
-routes
-    .get('/', function (req, res, next) {
-        return next();
-    })
-    .post('/', function (req, res, next) {
-        // TODO: check signatures
-        var body = '';
-        req.on('data', function(chunk) {
-            console.log('ondata', JSON.parse(chunk));
-            body += chunk;
-        });
-        req.on('end', function() {            
-            var data = JSON.parse(body);
-            var event = req.headers['x-github-event'];
-            console.log('ondataend with event', event);
-            switch(event){
-                case 'pull_request': handlers.pull_request_handler(data);
-                case 'pull_request_review': break;
-                case 'pull_request_review_comment': break;
-                default: break;
-            }
-        });
-        res.end(http.STATUS_CODES[200] + '\n');
-    })
-    .get(function (req, res, next) {
-        res.writeHead(404);
-        return next();
-    })
-    .get(function (req, res, next) {
-        res.end(http.STATUS_CODES[404] + '\n');
-    });
+app.set('port', (process.env.PORT || 3000));
 
-http.createServer(function (req, res) {
-    if (!routes.route(req, res)) {
-        res.writeHead(501);
-        res.end(http.STATUS_CODES[501] + '\n');
+app.use( express.static(__dirname + '/public') );
+app.use( bodyParser.json() );
+
+app.get('/', function(req, res) {
+    res.sendStatus(200)
+});
+
+app.post('/', function(req, res) {
+    console.log(req.body);
+    var event = req.headers['x-github-event'];
+    switch(event){
+        case 'pull_request': handlers.pull_request_handler(req.body);
+        case 'pull_request_review': break;
+        case 'pull_request_review_comment': break;
+        default: break;
     }
-}).listen(process.env.PORT || 3000);
+    res.sendStatus(200)
+});
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
