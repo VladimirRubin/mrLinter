@@ -39,4 +39,4 @@ http.createServer(function (req, res) {
         res.writeHead(501);
         res.end(http.STATUS_CODES[501] + '\n');
     }
-}).listen(3000);
+}).listen(process.env.PORT || 3000);

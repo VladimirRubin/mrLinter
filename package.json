@@ -2,8 +2,12 @@
   "name": "mrlinter",
   "version": "1.0.0",
   "description": "PEP8 and ESLint reviewers to github PR's",
+  "engines": {
+    "node": "6.2.1"
+  },
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
