@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 var pull_request_handler = function(data){
     var result = {};
     console.log('Pull datauest Handler', data);
@@ -11,6 +13,8 @@ var pull_request_handler = function(data){
             "extra_results": {},
             "pr_number": data.json.number,
         }
+
+        // TODO: Get differences
         // TODO: Check PEP8, ESLint
         // TODO: Send Message
         // TODO: Response 200
