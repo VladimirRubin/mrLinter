@@ -72,14 +72,12 @@ const getRawGitHubOptions = opts => Object(
     }
 );
 
-const getGitHubFilePromise = url => new Promise((resolve, reject) => {
+const getGitHubFilePromise = (url, media_type = 'application/vnd.github.v3.raw') => new Promise((resolve, reject) => {
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
     };
-    if (url.includes('.diff')) {
-        githubRequestOptions['Accept'] = 'application/vnd.github.v3.diff';
-    }
+    githubRequestOptions['Accept'] = media_type;
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
         if (statusCode === 200) {
