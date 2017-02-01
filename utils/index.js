@@ -96,9 +96,11 @@ const prepareComment = (report, author) => {
     let commentBody = report.errorCount
         ? `- In the file [**${report.inputFilename}**], following are the ESLint issues :\n`
         : `- There are no ESLint issues in the file [**${report.inputFilename}**]\n`;
-    report.results[0].messages.forEach(message => {
-        commentBody += `> ${message.line}:${message.column}\terror\t${message.message}\t${message.ruleId}\n`
-    });
+    if (report.errorCount) {
+        report.results[0].messages.forEach(message => {
+            commentBody += `> ${message.line}:${message.column}\terror\t${message.message}\t${message.ruleId}\n`
+        });
+    }
     commentBody += "\n\n"
     return {
         header: commentHeader,

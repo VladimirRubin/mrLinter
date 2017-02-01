@@ -23,12 +23,11 @@ var pull_request_handler = function (data) {
             .then(fileData => {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
-                console.log('All diff files: ', filesToCheck);
                 const onlyJsFiles = filesToCheck.filter(utils.regExpFilter(/.js/));
                 console.log('Go to checked next files: ', onlyJsFiles);
                 fs.mkdir(CHECKED_DIR, () => {
                     onlyJsFiles.forEach(file => {
-                        console.log('Start checking ', file);
+                        console.log('Start downloading ', file);
                         const outputFilename = file.split('/').slice(-1)[0];
                         const fileStream = fs.createWriteStream(`${CHECKED_DIR}/${outputFilename}`);
                         const requestOptions = utils.getRawGitHubOptions({
@@ -42,12 +41,12 @@ var pull_request_handler = function (data) {
                             response.on('end', () => {
                                 console.log(file, ' fully load');
                                 // Prepare message
-                                console.log('Processing report to ', outputFilename);
+                                console.log(`Processing report to ${CHECKED_DIR}/${outputFilename}`);
                                 const report = Object.assign(utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`], { inputFilename: file }));
-                                console.log(outputFilename, ' report processing complete');
+                                console.log(outputFilename, ' report processing complete: ', report);
                                 const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
-                                console.log(commentText);
+                                console.log(outputFilename , ' comment is ready: ', commentText);
                                 // Send Message
                                 const commentRequestOptions = {
                                     protocol: 'https:',
