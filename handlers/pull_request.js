@@ -22,7 +22,6 @@ var pull_request_handler = function (data) {
         utils.getGitHubFilePromise(`https://api.github.com/repos/${result.owner}/${result.repository}/pulls/${result.pr_number}`, 'application/vnd.github.v3.diff')
             .then(fileData => {
                 // Check PEP8, ESLint
-                console.log(fileData);
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
                 console.log('All diff files: ', filesToCheck);
                 const onlyJsFiles = filesToCheck.filter(utils.regExpFilter(/.js/));
