@@ -43,7 +43,8 @@ var pull_request_handler = function (data) {
                                 console.log(file, ' fully load');
                                 // Prepare message
                                 console.log(`Processing report to ${CHECKED_DIR}/${outputFilename}`);
-                                const report = Object.assign(utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`], { inputFilename: file }));
+                                const report = utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`]);
+                                report.inputFilename = file;
                                 console.log(outputFilename, ' report processing complete: ', report);
                                 const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
