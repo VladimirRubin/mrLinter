@@ -19,7 +19,6 @@ var pull_request_handler = function (data) {
             pr_number: data.number,
         }
         // Get differences
-        console.log(result.diff_url);
         utils.getGitHubFilePromise(result.diff_url)
             .then(fileData => {
                 // Check PEP8, ESLint

@@ -73,12 +73,14 @@ const getRawGitHubOptions = opts => Object(
 );
 
 const getGitHubFilePromise = url => new Promise((resolve, reject) => {
+    console.log('getGitHubFilePromise to: ', url);
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
     };
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
+        console.log('Headers: ', response.headers);
         if (statusCode === 200) {
             resolve(body);
         } else {
