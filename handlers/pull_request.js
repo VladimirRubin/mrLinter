@@ -48,18 +48,18 @@ var pull_request_handler = function (data) {
                                 console.log(outputFilename, ' report processing complete');
                                 const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
-                                console.log(outputFilename , ' comment is ready');
+                                console.log(outputFilename , ' comment is ready: ', comment);
                                 // Send Message
-                                const commentRequestOptions = {
-                                    protocol: 'https:',
-                                    host: 'api.github.com',
-                                    method: 'POST',
-                                    path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
-                                    headers: utils.getGitHubHeaders(),
-                                }
-                                var req = http.request(commentRequestOptions, res => {});
-                                req.write(JSON.stringify({ body: commentText }));
-                                req.end();
+                                // const commentRequestOptions = {
+                                //     protocol: 'https:',
+                                //     host: 'api.github.com',
+                                //     method: 'POST',
+                                //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
+                                //     headers: utils.getGitHubHeaders(),
+                                // }
+                                // var req = http.request(commentRequestOptions, res => {});
+                                // req.write(JSON.stringify({ body: commentText }));
+                                // req.end();
                                 // rmdirSync(CHECKED_DIR);
                             });
                         });
