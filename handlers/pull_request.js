@@ -9,14 +9,14 @@ var pull_request_handler = function (data) {
     var result = {};
     if (['synchronize', 'opened', 'reopened'].indexOf(data.action) >= -1) {
         result = {
-            after_commit_hash: data.json.pull_request.head.sha,
-            owner: data.json.pull_request.head.repo.owner.login,
-            repository: data.json.repository.full_name,
-            author: data.json.pull_request.user.login,
-            diff_url: data.json.pull_request.diff_url,
+            after_commit_hash: data.pull_request.head.sha,
+            owner: data.pull_request.head.repo.owner.login,
+            repository: data.repository.full_name,
+            author: data.pull_request.user.login,
+            diff_url: data.pull_request.diff_url,
             results: {},
             extra_results: {},
-            pr_number: data.json.number,
+            pr_number: data.number,
         }
         console.log(result, data);
         // // Get differences
