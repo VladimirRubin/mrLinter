@@ -7,6 +7,7 @@ const CHECKED_DIR = 'checkedDir';
 
 var pull_request_handler = function (data) {
     var result = {};
+    console.log('GitHub Action is: ', data.action);
     if (['synchronize', 'opened', 'reopened'].indexOf(data.action) >= -1) {
         result = {
             after_commit_hash: data.pull_request.head.sha,
@@ -48,25 +49,16 @@ var pull_request_handler = function (data) {
                                 const commentText = comment.header + comment.body;
                                 console.log(outputFilename , ' comment is ready: ', commentText);
                                 // Send Message
-                                const commentRequestOptions = {
-                                    protocol: 'https:',
-                                    host: 'api.github.com',
-                                    method: 'POST',
-                                    path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
-                                    headers: utils.getGitHubHeaders(),
-                                }
-                                var req = http.request(commentRequestOptions, function (res) {
-                                    var chunks = [];
-                                    res.on("data", function (chunk) {
-                                        chunks.push(chunk);
-                                    });
-                                    res.on("end", function () {
-                                        var body = Buffer.concat(chunks);
-                                        console.log(body.toString());
-                                    });
-                                });
-                                req.write(JSON.stringify({ body: commentText }));
-                                req.end();
+                                // const commentRequestOptions = {
+                                //     protocol: 'https:',
+                                //     host: 'api.github.com',
+                                //     method: 'POST',
+                                //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
+                                //     headers: utils.getGitHubHeaders(),
+                                // }
+                                // var req = http.request(commentRequestOptions, res => {});
+                                // req.write(JSON.stringify({ body: commentText }));
+                                // req.end();
                                 rmdirSync(CHECKED_DIR);
                             });
                         });
