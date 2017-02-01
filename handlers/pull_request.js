@@ -19,7 +19,7 @@ var pull_request_handler = function (data) {
             pr_number: data.number,
         }
         // Get differences
-        utils.getGitHubFilePromise(result.diff_url)
+        utils.getGitHubFilePromise(`https://api.github.com/repos/${result.owner}/${result.repository}/pulls/${result.pr_number}`)
             .then(fileData => {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
@@ -29,10 +29,10 @@ var pull_request_handler = function (data) {
                         const outputFilename = file.split('/').slice(-1)[0];
                         const fileStream = fs.createWriteStream(`${CHECKED_DIR}/${outputFilename}`);
                         const requestOptions = utils.getRawGitHubOptions({
-                             owner: result.owner,
-                             repository: result.repository,
-                             sha: result.after_commit_hash,
-                             filename: file,
+                            owner: result.owner,
+                            repository: result.repository,
+                            sha: result.after_commit_hash,
+                            filename: file,
                         });
                         const request = http.get(requestOptions, function (response) {
                             response.pipe(fileStream);

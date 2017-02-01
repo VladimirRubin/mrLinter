@@ -73,11 +73,13 @@ const getRawGitHubOptions = opts => Object(
 );
 
 const getGitHubFilePromise = url => new Promise((resolve, reject) => {
-    console.log('getGitHubFilePromise to: ', url, ' with next headers: ', getGitHubHeaders());
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
     };
+    if (url.includes('.diff')) {
+        githubRequestOptions['Accept'] = 'application/vnd.github.v3.diff';
+    }
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
         console.log('Headers: ', response.headers);
