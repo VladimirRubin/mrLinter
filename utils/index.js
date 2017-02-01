@@ -5,8 +5,6 @@ var fs = require('fs');
 var parseDiff = require('parse-diff');
 var CLIEngine = require("eslint").CLIEngine;
 
-var rmdirSync = require('./rmdir');
-
 const CHECKED_DIR = 'checkedDir';
 
 const ORGANIZATION = 'liveyourmessage';
@@ -45,9 +43,13 @@ var eslintCli = new CLIEngine({
     }
 });
 
+const checkEslint = pathList => {
+    return eslintCli.executeOnFiles(pathList);
+}
+
 const getFilesFromDiff = diff => parseDiff(diff);
 
-const regExpFilter = regExp => filename => regExp.text(filename);
+const regExpFilter = regExp => filename => regExp.test(filename);
 
 const getFilePath = (repositoryOwner, repositoryName, sha, filename) =>
     `/${repositoryOwner}/${repositoryName}/${sha}/${filename}`;
@@ -61,26 +63,30 @@ const getGitHubHeaders = () => Object(
     }
 )
 
-const getRawGitHubOptions = filename => Object(
+const getRawGitHubOptions = opts => Object(
     {
         protocol: 'https:',
         host: 'raw.githubusercontent.com',
-        path: getFilePath(ORGANIZATION, REPOSITORY, SHA, filename),
+        path: getFilePath(opts.owner, opts.repository, opts.sha, opt.filename),
         headers: getGitHubHeaders(),
     }
 );
 
-const getGitHubFile = (url, cb) => {
+const getGitHubFilePromise = url => new Promise((resolve, reject) => {
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
-    };   
-    request(options, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
-            cb(response.json());
+    };
+    request(githubRequestOptions, (error, response, body) => {
+        const statusCode = response.statusCode;
+        if (error) {
+            return reject(error);
+        } else if (statusCode !== 200) {
+            return reject(body);
         }
+        return resolve(body);
     });
-};
+});
 
 const prepareComment = report => {
     const author = 'mrlinter';
@@ -100,52 +106,12 @@ const prepareComment = report => {
 }
 
 module.exports = {
-    getGitHubFile: getGitHubFile,
+    getGitHubFilePromise: getGitHubFilePromise,
     getFilesFromDiff: getFilesFromDiff,
     regExpFilter: regExpFilter,
     getFilePath: getFilePath,
     getGitHubHeaders: getGitHubHeaders,
     getRawGitHubOptions: getRawGitHubOptions,
+    checkEslint: checkEslint,
     prepareComment: prepareComment,
 }
-
-// const inputFilename = 'editor/src/containers/main/editor/textEditors/tinyMceEditor/tinymce/tinymce.js';
-// const outputFilename = inputFilename.split('/').slice(-1)[0];
-
-// fs.mkdir(CHECKED_DIR, () => {
-//     const file = fs.createWriteStream(`${CHECKED_DIR}/${outputFilename}`);
-//     const requestOptions = getRawGitHubOptions(inputFilename);
-
-//     var request = http.get(requestOptions, function (response) {
-//         response.pipe(file);
-//         response.on('end', () => {
-//             const report = Object.assign(eslintCli.executeOnFiles([`${CHECKED_DIR}/`]), { inputFilename });
-//             if (report.errorCount > 0) {
-//                 console.log('Have errors\n');
-//             };
-//             const comment = prepareComment(report);
-//             const commentText = comment.header + comment.body;
-
-//             const commentRequestOptions = {
-//                 protocol: 'https:',
-//                 host: 'api.github.com',
-//                 method: 'POST',
-//                 path: `/repos/${ORGANIZATION}/${REPOSITORY}/issues/${PR_NUMBER}/comments`,
-//                 headers: getGitHubHeaders(),
-//             }
-//             var req = http.request(commentRequestOptions, function (res) {
-//                 var chunks = [];
-//                 res.on("data", function (chunk) {
-//                     chunks.push(chunk);
-//                 });
-//                 res.on("end", function () {
-//                     var body = Buffer.concat(chunks);
-//                     console.log(body.toString());
-//                 });
-//             });
-//             req.write(JSON.stringify({ body: commentText }));
-//             req.end();
-//             rmdirSync('checkedDir');
-//         });
-//     });
-// });
