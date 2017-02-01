@@ -73,7 +73,7 @@ const getRawGitHubOptions = opts => Object(
 );
 
 const getGitHubFilePromise = url => new Promise((resolve, reject) => {
-    console.log('getGitHubFilePromise to: ', url);
+    console.log('getGitHubFilePromise to: ', url, ' with next headers: ', getGitHubHeaders());
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
