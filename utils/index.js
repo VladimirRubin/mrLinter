@@ -21,8 +21,6 @@ var eslintCli = new CLIEngine({
         "worker",
         "jquery"
     ],
-    useEslintrc: true,
-    configFile: '../.eslintrc.js',
     rules: {
         "indent": [
             "error",
