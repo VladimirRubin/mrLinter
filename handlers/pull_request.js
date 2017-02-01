@@ -45,22 +45,22 @@ var pull_request_handler = function (data) {
                                 console.log(`Processing report to ${CHECKED_DIR}/${outputFilename}`);
                                 const report = utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`]);
                                 report.inputFilename = file;
-                                console.log(outputFilename, ' report processing complete: ', report);
+                                console.log(outputFilename, ' report processing complete');
                                 const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
-                                console.log(outputFilename , ' comment is ready: ', commentText);
+                                console.log(outputFilename , ' comment is ready');
                                 // Send Message
-                                // const commentRequestOptions = {
-                                //     protocol: 'https:',
-                                //     host: 'api.github.com',
-                                //     method: 'POST',
-                                //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
-                                //     headers: utils.getGitHubHeaders(),
-                                // }
-                                // var req = http.request(commentRequestOptions, res => {});
-                                // req.write(JSON.stringify({ body: commentText }));
-                                // req.end();
-                                rmdirSync(CHECKED_DIR);
+                                const commentRequestOptions = {
+                                    protocol: 'https:',
+                                    host: 'api.github.com',
+                                    method: 'POST',
+                                    path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
+                                    headers: utils.getGitHubHeaders(),
+                                }
+                                var req = http.request(commentRequestOptions, res => {});
+                                req.write(JSON.stringify({ body: commentText }));
+                                req.end();
+                                // rmdirSync(CHECKED_DIR);
                             });
                         });
                     });
