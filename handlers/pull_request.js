@@ -22,7 +22,9 @@ var pull_request_handler = function (data) {
         utils.getGitHubFilePromise(`https://api.github.com/repos/${result.owner}/${result.repository}/pulls/${result.pr_number}`)
             .then(fileData => {
                 // Check PEP8, ESLint
+                console.log(fileData);
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
+                console.log('Files to check: ', filesToCheck);
                 const onlyJsFiles = filesToCheck.filter(utils.regExpFilter(/.js/));
                 console.log('Go to checked next files: ', onlyJsFiles);
                 fs.mkdir(CHECKED_DIR, () => {
@@ -74,7 +76,7 @@ var pull_request_handler = function (data) {
                 });
 
             })
-            .catch(e => console.error(e));
+            .catch(e => console.error(`Error: ${e}`));
     }
     return result;
 }

@@ -82,7 +82,6 @@ const getGitHubFilePromise = url => new Promise((resolve, reject) => {
     }
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
-        console.log('Headers: ', response.headers);
         if (statusCode === 200) {
             resolve(body);
         } else {
