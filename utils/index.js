@@ -72,12 +72,12 @@ const getRawGitHubOptions = opts => Object(
     }
 );
 
-const getGitHubFilePromise = (url, media_type = 'application/vnd.github.v3.raw') => new Promise((resolve, reject) => {
+const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') => new Promise((resolve, reject) => {
     const githubRequestOptions = {
         url: url,
         headers: getGitHubHeaders(),
     };
-    githubRequestOptions['Accept'] = media_type;
+    githubRequestOptions['Accept'] = mediaType;
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
         if (statusCode === 200) {
