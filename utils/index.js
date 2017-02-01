@@ -93,8 +93,7 @@ const getGitHubFilePromise = url => new Promise((resolve, reject) => {
     });
 });
 
-const prepareComment = report => {
-    const author = 'mrlinter';
+const prepareComment = (report, author) => {
     const commentHeader = `Hello @${author}! Thanks for submitting the PR.\n\n`;
     // const commentHeader = `Hello ${author}! Thanks for updating the PR.\n\n`;
     let commentBody = report.errorCount

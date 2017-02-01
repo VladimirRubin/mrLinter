@@ -39,7 +39,7 @@ var pull_request_handler = function (data) {
                             response.on('end', () => {
                                 // Prepare message
                                 const report = Object.assign(utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`], { inputFilename: file }));
-                                const comment = utils.prepareComment(report);
+                                const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
                                 // Send Message
                                 const commentRequestOptions = {
