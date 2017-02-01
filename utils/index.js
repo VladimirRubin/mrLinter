@@ -67,7 +67,7 @@ const getRawGitHubOptions = opts => Object(
     {
         protocol: 'https:',
         host: 'raw.githubusercontent.com',
-        path: getFilePath(opts.owner, opts.repository, opts.sha, opt.filename),
+        path: getFilePath(opts.owner, opts.repository, opts.sha, opts.filename),
         headers: getGitHubHeaders(),
     }
 );
