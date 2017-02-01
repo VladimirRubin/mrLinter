@@ -14,7 +14,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    console.log(req.body);
     var event = req.headers['x-github-event'];
     switch(event){
         case 'pull_request': handlers.pull_request_handler(req.body);
