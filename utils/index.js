@@ -79,12 +79,15 @@ const getGitHubFilePromise = url => new Promise((resolve, reject) => {
     };
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
-        if (error) {
-            return reject(error);
-        } else if (statusCode !== 200) {
-            return reject(body);
+        if (statusCode === 200) {
+            resolve(body);
+        } else {
+            if (statusCode === 301 && response.headers.location) {
+                resolve(getGitHubFilePromise(response.headers.location));
+            } else {
+                reject(statusCode);
+            }
         }
-        return resolve(body);
     });
 });
 
