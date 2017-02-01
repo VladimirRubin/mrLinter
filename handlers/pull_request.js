@@ -24,8 +24,10 @@ var pull_request_handler = function (data) {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
                 const onlyJsFiles = filesToCheck.filter(utils.regExpFilter(/.js/));
+                console.log('Go to checked next files: ', onlyJsFiles);
                 fs.mkdir(CHECKED_DIR, () => {
                     onlyJsFiles.forEach(file => {
+                        console.log('Start checking ', file);
                         const outputFilename = file.split('/').slice(-1)[0];
                         const fileStream = fs.createWriteStream(`${CHECKED_DIR}/${outputFilename}`);
                         const requestOptions = utils.getRawGitHubOptions({
@@ -37,10 +39,14 @@ var pull_request_handler = function (data) {
                         const request = http.get(requestOptions, function (response) {
                             response.pipe(fileStream);
                             response.on('end', () => {
+                                console.log(file, ' fully load');
                                 // Prepare message
+                                console.log('Processing report to ', outputFilename);
                                 const report = Object.assign(utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`], { inputFilename: file }));
+                                console.log(outputFilename, ' report processing complete');
                                 const comment = utils.prepareComment(report, result.author);
                                 const commentText = comment.header + comment.body;
+                                console.log(commentText);
                                 // Send Message
                                 const commentRequestOptions = {
                                     protocol: 'https:',
