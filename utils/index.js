@@ -77,8 +77,7 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
         url: url,
         headers: getGitHubHeaders(),
     };
-    githubRequestOptions['Accept'] = mediaType;
-    console.log('githubRequestOptions: ', githubRequestOptions);
+    githubRequestOptions.headers['Accept'] = mediaType;
     request(githubRequestOptions, (error, response, body) => {
         const statusCode = response.statusCode;
         if (statusCode === 200) {
