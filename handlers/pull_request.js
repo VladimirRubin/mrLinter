@@ -18,7 +18,7 @@ var pull_request_handler = function (data) {
             extra_results: {},
             pr_number: data.number,
         }
-        console.log(result, data);
+        console.log(result);
         // // Get differences
         // utils.getGitHubFilePromise(result.diff_url)
         //     .then(fileData => {
