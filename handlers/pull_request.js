@@ -47,10 +47,11 @@ var pull_request_handler = function (data) {
                             //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
                             //     headers: utils.getGitHubHeaders(),
                             // }
-                            // var req = http.request(commentRequestOptions, res => {});
+                            // var req = http.request(commentRequestOptions, res => {
+                            //     res.on('end', rmdirSync(CHECKED_DIR));
+                            // });
                             // req.write(JSON.stringify({ body: commentText }));
                             // req.end();
-                            // rmdirSync(CHECKED_DIR);
                         });
                 });
             })
