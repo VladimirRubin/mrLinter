@@ -93,19 +93,23 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
 const prepareComment = (report, author) => {
     const commentHeader = `Hello @${author}! Thanks for submitting the PR.\n\n`;
     // const commentHeader = `Hello ${author}! Thanks for updating the PR.\n\n`;
-    let commentBody = '';    
+    let commentBody = '';
     if (report.errorCount) {
-        report.results.forEach(result => {
+        console.log(`Report have the ${report.errorCount} errors in ${report.results.length} files`);
+        report.results.forEach((result, resultIndex) => {
             const resultFilename = result.filePath;
+            console.log(`Start processing ${resultIndex + 1} result of ${report.results.length} for ${resultFilename}`);
             let resultCommentPart = result.errorCount
                 ? `- In the file [**${resultFilename}**], following are the ESLint issues :\n`
                 : `- There are no ESLint issues in the file [**${resultFilename}**]\n`;
-            result.messages.forEach(message => {
+            result.messages.forEach((message, messageIndex) => {
+                console.log(`Start processing ${messageIndex + 1} of ${result.messages.length} message of ${resultFilename}`)
                 resultCommentPart += `> ${message.line}:${message.column}\t${message.message}\t${message.ruleId}\n`
             });
             commentBody += `${resultCommentPart}\n\n`
         })
     }
+    console.log('Comment successfuly created');
     return {
         header: commentHeader,
         body: commentBody,
