@@ -2,8 +2,8 @@ var fs = require('fs');
 var http = require('https');
 var utils = require('../utils');
 var rmdirSync = require('../utils/rmdir');
-
-const CHECKED_DIR = 'checkedDir';
+var CHECKED_DIR = require('../constants').CHECKED_DIR;
+var multiloaderPromise = require('./multiLoader');
 
 var pull_request_handler = function (data) {
     var result = {};
@@ -24,48 +24,35 @@ var pull_request_handler = function (data) {
             .then(fileData => {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
-                const onlyJsFiles = filesToCheck.filter(utils.regExpFilter(/.js/));
+                const onlyJsFileList = filesToCheck.filter(utils.regExpFilter(/.js/));
                 console.log('Go to checked next files: ', onlyJsFiles);
+                const onlyJsFiles = onlyJsFileList.map(file => Object({
+                    owner: result.owner,
+                    repository: result.repository,
+                    sha: result.after_commit_hash,
+                    filename: file,
+                }));
                 fs.mkdir(CHECKED_DIR, () => {
-                    onlyJsFiles.forEach(file => {
-                        console.log('Start downloading ', file);
-                        const outputFilename = file.split('/').slice(-1)[0];
-                        const fileStream = fs.createWriteStream(`${CHECKED_DIR}/${outputFilename}`);
-                        const requestOptions = utils.getRawGitHubOptions({
-                            owner: result.owner,
-                            repository: result.repository,
-                            sha: result.after_commit_hash,
-                            filename: file,
+                    multiloaderPromise(onlyJsFiles)
+                        .then(() => {
+                            const report = utils.checkEslint([`${CHECKED_DIR}/`]);
+                            const comment = utils.prepareComment(report, result.author);
+                            const commentText = comment.header + comment.body;
+                            console.log(outputFilename, ' comment is ready: ', comment);
+                            // Send Message
+                            // const commentRequestOptions = {
+                            //     protocol: 'https:',
+                            //     host: 'api.github.com',
+                            //     method: 'POST',
+                            //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
+                            //     headers: utils.getGitHubHeaders(),
+                            // }
+                            // var req = http.request(commentRequestOptions, res => {});
+                            // req.write(JSON.stringify({ body: commentText }));
+                            // req.end();
+                            // rmdirSync(CHECKED_DIR);
                         });
-                        const request = http.get(requestOptions, function (response) {
-                            response.pipe(fileStream);
-                            response.on('end', () => {
-                                console.log(file, ' fully load');
-                                // Prepare message
-                                console.log(`Processing report to ${CHECKED_DIR}/${outputFilename}`);
-                                const report = utils.checkEslint([`${CHECKED_DIR}/${outputFilename}`]);
-                                report.inputFilename = file;
-                                console.log(outputFilename, ' report processing complete');
-                                const comment = utils.prepareComment(report, result.author);
-                                const commentText = comment.header + comment.body;
-                                console.log(outputFilename , ' comment is ready: ', comment);
-                                // Send Message
-                                // const commentRequestOptions = {
-                                //     protocol: 'https:',
-                                //     host: 'api.github.com',
-                                //     method: 'POST',
-                                //     path: `/repos/${result.owner}/${result.repository}/issues/${result.pr_number}/comments`,
-                                //     headers: utils.getGitHubHeaders(),
-                                // }
-                                // var req = http.request(commentRequestOptions, res => {});
-                                // req.write(JSON.stringify({ body: commentText }));
-                                // req.end();
-                                // rmdirSync(CHECKED_DIR);
-                            });
-                        });
-                    });
                 });
-
             })
             .catch(e => console.error(`Error: ${e}`));
     }

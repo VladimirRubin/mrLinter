@@ -93,20 +93,25 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
 const prepareComment = (report, author) => {
     const commentHeader = `Hello @${author}! Thanks for submitting the PR.\n\n`;
     // const commentHeader = `Hello ${author}! Thanks for updating the PR.\n\n`;
-    let commentBody = report.errorCount
-        ? `- In the file [**${report.inputFilename}**], following are the ESLint issues :\n`
-        : `- There are no ESLint issues in the file [**${report.inputFilename}**]\n`;
+    let commentBody = '';    
     if (report.errorCount) {
-        report.results[0].messages.forEach(message => {
-            commentBody += `> ${message.line}:${message.column}\terror\t${message.message}\t${message.ruleId}\n`
-        });
+        report.results.forEach(result => {
+            const resultFilename = result.filePath;
+            let resultCommentPart = result.errorCount
+                ? `- In the file [**${resultFilename}**], following are the ESLint issues :\n`
+                : `- There are no ESLint issues in the file [**${resultFilename}**]\n`;
+            result.messages.forEach(message => {
+                resultCommentPart += `> ${message.line}:${message.column}\t${message.message}\t${message.ruleId}\n`
+            });
+            commentBody += `${resultCommentPart}\n\n`
+        })
     }
-    commentBody += "\n\n"
     return {
         header: commentHeader,
         body: commentBody,
     }
 }
+
 
 module.exports = {
     getGitHubFilePromise: getGitHubFilePromise,
