@@ -8,7 +8,7 @@ var multiloaderPromise = require('../utils/multiLoader');
 var pull_request_handler = function (data) {
     var result = {};
     console.log('GitHub Action is: ', data.action);
-    if (['synchronize', 'opened', 'reopened'].indexOf(data.action) >= -1) {
+    if (['synchronize', 'opened', 'reopened'].indexOf(data.action) > -1) {
         result = {
             after_commit_hash: data.pull_request.head.sha,
             owner: data.repository.owner.login,
