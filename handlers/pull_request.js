@@ -49,7 +49,7 @@ var pull_request_handler = function (data) {
                                 headers: utils.getGitHubHeaders(),
                             }
                             var req = http.request(commentRequestOptions, res => {
-                                res.on('end', rmdirSync(CHECKED_DIR));
+                                res.on('end', () => rmdirSync(CHECKED_DIR));
                             });
                             req.write(JSON.stringify({ body: commentText }));
                             req.end();
