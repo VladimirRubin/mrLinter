@@ -35,7 +35,9 @@ var pull_request_handler = function (data) {
                 fs.mkdir(CHECKED_DIR, () => {
                     multiloaderPromise(onlyJsFiles)
                         .then(() => {
+                            console.log('Processing ESLint report');
                             const report = utils.checkEslint([`${CHECKED_DIR}/`]);
+                            console.log('Report successfuly created');
                             const comment = utils.prepareComment(report, result.author);
                             const commentText = comment.header + comment.body;
                             console.log(outputFilename, ' comment is ready: ', comment);
