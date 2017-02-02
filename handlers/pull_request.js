@@ -3,7 +3,7 @@ var http = require('https');
 var utils = require('../utils');
 var rmdirSync = require('../utils/rmdir');
 var CHECKED_DIR = require('../constants').CHECKED_DIR;
-var multiloaderPromise = require('./multiLoader');
+var multiloaderPromise = require('../utils/multiLoader');
 
 var pull_request_handler = function (data) {
     var result = {};
