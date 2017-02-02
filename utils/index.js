@@ -109,7 +109,6 @@ const prepareComment = (report, author) => {
             commentBody += `${resultCommentPart}\n\n`
         })
     }
-    console.log('Comment successfuly created');
     return {
         header: commentHeader,
         body: commentBody,

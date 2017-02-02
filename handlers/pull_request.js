@@ -40,7 +40,7 @@ var pull_request_handler = function (data) {
                             console.log('Report successfuly created');
                             const comment = utils.prepareComment(report, result.author);
                             const commentText = comment.header + comment.body;
-                            console.log(outputFilename, ' comment is ready: ', comment);
+                            console.log('Comment is ready: ', comment);
                             // Send Message
                             // const commentRequestOptions = {
                             //     protocol: 'https:',
