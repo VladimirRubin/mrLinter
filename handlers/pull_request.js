@@ -25,7 +25,7 @@ var pull_request_handler = function (data) {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
                 const onlyJsFileList = filesToCheck.filter(utils.regExpFilter(/.js/));
-                console.log('Go to checked next files: ', onlyJsFiles);
+                console.log('Go to checked next files: ', onlyJsFileList);
                 const onlyJsFiles = onlyJsFileList.map(file => Object({
                     owner: result.owner,
                     repository: result.repository,
