@@ -4,14 +4,10 @@ var fs = require('fs');
 
 var parseDiff = require('parse-diff');
 var CLIEngine = require("eslint").CLIEngine;
+const CHECKED_DIR = require('../constants').CHECKED_DIR;
 
-const CHECKED_DIR = 'checkedDir';
-
-const ORGANIZATION = 'liveyourmessage';
-const REPOSITORY = 'heroik-v2';
-const SHA = 'master';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
-const PR_NUMBER = 3;
+
 
 var eslintCli = new CLIEngine({
     fix: false,
@@ -115,6 +111,8 @@ const prepareComment = (report, author) => {
     }
 }
 
+const getCheckedDirName = requestId => `${CHECKED_DIR}-${requestId}`; 
+
 
 module.exports = {
     getGitHubFilePromise: getGitHubFilePromise,
@@ -125,4 +123,5 @@ module.exports = {
     getRawGitHubOptions: getRawGitHubOptions,
     checkEslint: checkEslint,
     prepareComment: prepareComment,
+    getCheckedDirName: getCheckedDirName,
 }

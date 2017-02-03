@@ -2,13 +2,14 @@ var fs = require('fs');
 var http = require('https');
 var utils = require('../utils');
 var rmdirSync = require('../utils/rmdir');
-var CHECKED_DIR = require('../constants').CHECKED_DIR;
 var multiloaderPromise = require('../utils/multiLoader');
 
-var pull_request_handler = function (data) {
+var pull_request_handler = function (request) {
     var result = {};
+    const data = request.body;
+    const checkedDir = utils.getCheckedDirName(request.id);
     console.log('GitHub Action is: ', data.action);
-    if (['synchronize', 'opened', 'reopened'].indexOf(data.action) > -1) {
+    if (['synchronize', 'opened', 'reopened', 'edited'].indexOf(data.action) > -1) {
         result = {
             after_commit_hash: data.pull_request.head.sha,
             owner: data.repository.owner.login,
@@ -32,11 +33,11 @@ var pull_request_handler = function (data) {
                     sha: result.after_commit_hash,
                     filename: file,
                 }));
-                fs.mkdir(CHECKED_DIR, () => {
-                    multiloaderPromise(onlyJsFiles)
+                fs.mkdir(checkedDir, () => {
+                    multiloaderPromise(checkedDir, onlyJsFiles)
                         .then(() => {
                             console.log('Processing ESLint report');
-                            const report = utils.checkEslint([`${CHECKED_DIR}/`]);
+                            const report = utils.checkEslint([`${checkedDir}/`]);
                             console.log('Report successfuly created');
                             const comment = utils.prepareComment(report, result.author);
                             const commentText = comment.header + comment.body;
@@ -49,7 +50,7 @@ var pull_request_handler = function (data) {
                                 headers: utils.getGitHubHeaders(),
                             }
                             var req = http.request(commentRequestOptions, res => {
-                                res.on('end', () => rmdirSync(CHECKED_DIR));
+                                res.on('end', () => rmdirSync(checkedDir));
                             });
                             req.write(JSON.stringify({ body: commentText }));
                             req.end();
