@@ -18,7 +18,7 @@ var eslintCli = new CLIEngine({
         "jquery"
     ],
     baseConfig: {
-        extends: ["airbnb"],
+        extends: "aibnb",
     },
     rules: {
         "new-cap": [
