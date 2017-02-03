@@ -33,13 +33,14 @@ var pull_request_handler = function (request) {
                     sha: result.after_commit_hash,
                     filename: file,
                 }));
+                const filePath = filesToCheck.reduce((acc, curr) => { acc[curr.split('/').slice(-1)] = curr; return acc }, {})
                 fs.mkdir(checkedDir, () => {
                     multiloaderPromise(checkedDir, onlyJsFiles)
                         .then(() => {
                             console.log('Processing ESLint report');
                             const report = utils.checkEslint([`${checkedDir}/`]);
                             console.log('Report successfuly created');
-                            const comment = utils.prepareComment(report, result.author);
+                            const comment = utils.prepareComment(report, result.author, filePath);
                             const commentText = comment.header + comment.body;
                             // Send Message
                             const commentRequestOptions = {

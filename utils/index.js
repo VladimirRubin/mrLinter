@@ -111,14 +111,14 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
     });
 });
 
-const prepareComment = (report, author) => {
+const prepareComment = (report, author, filePath) => {
     const commentHeader = `Hello @${author}! Thanks for submitting the PR.\n\n`;
     // const commentHeader = `Hello ${author}! Thanks for updating the PR.\n\n`;
     let commentBody = '';
     if (report.errorCount) {
         console.log(`Report have the ${report.errorCount} errors in ${report.results.length} files`);
         report.results.forEach((result, resultIndex) => {
-            const resultFilename = result.filePath;
+            const resultFilename = filePath[result.filePath.split('/').slice(-1)];
             console.log(`Start processing ${resultIndex + 1} result of ${report.results.length} for ${resultFilename}`);
             let resultCommentPart = result.errorCount
                 ? `- In the file [**${resultFilename}**], following are the ESLint issues :\n`
