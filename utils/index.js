@@ -18,23 +18,45 @@ var eslintCli = new CLIEngine({
         "jquery"
     ],
     rules: {
-        "indent": [
-            "error",
-            "tab"
+        "new-cap": [
+            2,
+            {
+                "capIsNewExceptions": [
+                    "FluxMixin",
+                    "StoreWatchMixin"
+                ]
+            }
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
-    }
+        "react/prefer-es6-class": 0,
+        "react/no-deprecated": 0,
+        "react/no-find-dom-node": 0,
+        "global-require": 0,
+        "import/no-webpack-loader-syntax": 0,
+        "react/jsx-filename-extension": [1, {
+            "extensions": [".js", ".jsx"]
+        }],
+        "import/no-extraneous-dependencies": 0,
+        "import/no-unresolved": 0,
+        "jsx-a11y/href-no-hash": 0
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "globals": [
+        "_",
+        "tinymce",
+        "jsonh",
+        "compileSectionData",
+        "dataprebuiltId",
+        "autoresponderStatus",
+        "MagicWand",
+        "tinyMCE",
+        "FB"
+    ]
 });
 
 const checkEslint = pathList => {
