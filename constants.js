@@ -5,7 +5,7 @@ module.exports = {
         RegExp('^(editor/src/styles)'),
         RegExp('^(editor/src/images)'),
         RegExp('^(editor/src/fonts)'),
-        RegExp('^(editor/public/js)'),
+        RegExp('^(editor/public)'),
         RegExp('(.scss)$'),
         RegExp('(.svg)$'),
         RegExp('(.config.dev.js)$'),
