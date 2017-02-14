@@ -139,10 +139,13 @@ const prepareComment = (report, author, filePath) => {
             let resultCommentPart = result.errorCount
                 ? `- In the file [**${resultFilename}**], following are the ESLint issues :\n`
                 : `- There are no ESLint issues in the file [**${resultFilename}**]\n`;
-            result.messages.forEach((message, messageIndex) => {
-                console.log(`Start processing ${messageIndex + 1} of ${result.messages.length} message of ${resultFilename}`)
-                resultCommentPart += `> ${message.line}:${message.column}\t${message.message}\t${message.ruleId}\n`
-            });
+            if (result.errorCount) {
+                const onlyErrorMessages = result.messages.filter(message => (message.severity === 2));
+                result.messages.forEach((onlyErrorMessages, messageIndex) => {
+                    console.log(`Start processing ${messageIndex + 1} of ${result.messages.length} message of ${resultFilename}`)
+                    resultCommentPart += `> ${message.line}:${message.column}\t${message.message}\t${message.ruleId}\n`
+                });
+            }
             commentBody += `${resultCommentPart}\n\n`
         })
     }
@@ -152,7 +155,7 @@ const prepareComment = (report, author, filePath) => {
     }
 }
 
-const getCheckedDirName = requestId => `${CHECKED_DIR}-${requestId}`; 
+const getCheckedDirName = requestId => `${CHECKED_DIR}-${requestId}`;
 
 
 module.exports = {
