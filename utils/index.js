@@ -81,7 +81,7 @@ const getFilesFromDiff = diff => parseDiff(diff);
 
 const regExpFilter = regExp => filename => {
     if (_.isArray(regExp)) {
-        return _.any(regExp.map(re => re.test(filename)));
+        return _.some(regExp.map(re => re.test(filename)));
     }
     return regExp.test(filename);
 }
