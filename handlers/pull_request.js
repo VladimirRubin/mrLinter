@@ -1,5 +1,6 @@
 var fs = require('fs');
 var http = require('https');
+var _ = require('lodash');
 var utils = require('../utils');
 var rmdirSync = require('../utils/rmdir');
 var multiloaderPromise = require('../utils/multiLoader');
