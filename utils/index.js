@@ -81,7 +81,7 @@ const getFilesFromDiff = diff => parseDiff(diff);
 
 const regExpFilter = regExp => filename => {
     if (_.isArray(regExp)) {
-        return _.every(regExp.map(re => re.test(filename)));
+        return _.any(regExp.map(re => re.test(filename)));
     }
     return regExp.test(filename);
 }
@@ -130,10 +130,9 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
 const prepareComment = (report, filePath) => {
     let commentBody = '';
     if (report.errorCount) {
-        console.log(`Report have the ${report.errorCount} errors in ${report.results.length} files`);
+        console.log(`Report have the ${report.errorCount} errors`);
         report.results.forEach((result, resultIndex) => {
             const resultFilename = filePath[result.filePath.split('/').slice(-1)];
-            console.log(`Start processing ${resultIndex + 1} result of ${report.results.length} for ${resultFilename}`);
             let resultCommentPart = result.errorCount
                 ? `- In the file [**${resultFilename}**], following are the ESLint issues :\n`
                 : `- There are no ESLint issues in the file [**${resultFilename}**]\n`;
