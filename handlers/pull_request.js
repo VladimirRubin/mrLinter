@@ -45,8 +45,10 @@ var pull_request_handler = function (request) {
                             console.log('Processing ESLint report');
                             const report = utils.checkEslint([`${checkedDir}/`]);
                             console.log('Report successfuly created');
-                            const comment = utils.prepareComment(report, result.author, filePath);
-                            const commentText = comment.header + comment.body;
+                            const commentAction = (data.action === 'opened') ? 'submitting' : 'editing';
+                            const commentHeader = `Hello @${result.author}! Thanks for ${commentAction} the PR.\n\n`;
+                            const commentBody = utils.prepareComment(report, filePath);
+                            const commentText = commentHeader + commentBody;
                             // Send Message
                             const commentRequestOptions = {
                                 protocol: 'https:',

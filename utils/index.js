@@ -127,9 +127,7 @@ const getGitHubFilePromise = (url, mediaType = 'application/vnd.github.v3.raw') 
     });
 });
 
-const prepareComment = (report, author, filePath) => {
-    const commentHeader = `Hello @${author}! Thanks for submitting the PR.\n\n`;
-    // const commentHeader = `Hello ${author}! Thanks for updating the PR.\n\n`;
+const prepareComment = (report, filePath) => {
     let commentBody = '';
     if (report.errorCount) {
         console.log(`Report have the ${report.errorCount} errors in ${report.results.length} files`);
@@ -149,10 +147,7 @@ const prepareComment = (report, author, filePath) => {
             commentBody += `${resultCommentPart}\n\n`
         })
     }
-    return {
-        header: commentHeader,
-        body: commentBody,
-    }
+    return commentBody;
 }
 
 const getCheckedDirName = requestId => `${CHECKED_DIR}-${requestId}`;
