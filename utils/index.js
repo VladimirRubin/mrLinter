@@ -30,6 +30,16 @@ var eslintCli = new CLIEngine({
                 ]
             }
         ],
+        "import/extensions": 1,
+        "no-useless-escape": 1,
+        "no-bitwise": 1,
+        "no-plusplus": 1,
+        "react/forbid-prop-types": 1,
+        "react/require-default-props": 1,
+        "react/no-unused-prop-types": 1,
+        "jsx-a11y/no-static-element-interactions": 1,
+        "react/no-array-index-key": 1,
+        "no-unused-vars": 1,
         "react/prefer-es6-class": 0,
         "react/no-deprecated": 0,
         "react/no-find-dom-node": 0,
