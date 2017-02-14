@@ -138,7 +138,7 @@ const prepareComment = (report, filePath) => {
                 : `- There are no ESLint issues in the file [**${resultFilename}**]\n`;
             if (result.errorCount) {
                 const onlyErrorMessages = result.messages.filter(message => (message.severity === 2));
-                result.messages.forEach((onlyErrorMessages, messageIndex) => {
+                onlyErrorMessages.forEach((message, messageIndex) => {
                     console.log(`Start processing ${messageIndex + 1} of ${result.messages.length} message of ${resultFilename}`)
                     resultCommentPart += `> ${message.line}:${message.column}\t${message.message}\t${message.ruleId}\n`
                 });
