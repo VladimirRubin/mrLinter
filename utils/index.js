@@ -3,6 +3,7 @@ var request = require('request');
 var fs = require('fs');
 
 var parseDiff = require('parse-diff');
+var _ = require('lodash');
 var CLIEngine = require("eslint").CLIEngine;
 const CHECKED_DIR = require('../constants').CHECKED_DIR;
 
@@ -69,7 +70,7 @@ var eslintCli = new CLIEngine({
         "MagicWand",
         "tinyMCE",
         "FB"
-    ]
+    ],
 });
 
 const checkEslint = pathList => {
@@ -78,7 +79,12 @@ const checkEslint = pathList => {
 
 const getFilesFromDiff = diff => parseDiff(diff);
 
-const regExpFilter = regExp => filename => regExp.test(filename);
+const regExpFilter = regExp => filename => {
+    if (_.isArray(regExp)) {
+        return _.every(regExp.map(re => re.test(filename)));
+    }
+    return regExp.test(filename);
+}
 
 const getFilePath = (repositoryOwner, repositoryName, sha, filename) =>
     `/${repositoryOwner}/${repositoryName}/${sha}/${filename}`;

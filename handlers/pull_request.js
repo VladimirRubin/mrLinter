@@ -3,6 +3,7 @@ var http = require('https');
 var utils = require('../utils');
 var rmdirSync = require('../utils/rmdir');
 var multiloaderPromise = require('../utils/multiLoader');
+var constants = require('../constants');
 
 var pull_request_handler = function (request) {
     var result = {};
@@ -25,7 +26,9 @@ var pull_request_handler = function (request) {
             .then(fileData => {
                 // Check PEP8, ESLint
                 const filesToCheck = utils.getFilesFromDiff(fileData).map(file => file.to);
-                const onlyJsFileList = filesToCheck.filter(utils.regExpFilter(/.js/));
+                const onlyJsFileList = filesToCheck
+                                            .filter(utils.regExpFilter(/.js/))
+                                            .filter(!utils.regExpFilter(constants.IGNORE_ESLINT));
                 console.log('Go to checked next files: ', onlyJsFileList);
                 const onlyJsFiles = onlyJsFileList.map(file => Object({
                     owner: result.owner,
